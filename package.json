@@ -1,5 +1,5 @@
 {
-  "name": "react-vite-ts-template",
+  "name": "payhere-assignment",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -12,12 +12,14 @@
   },
   "dependencies": {
     "@emotion/react": "^11.10.5",
-    "@reduxjs/toolkit": "^1.9.0",
+    "@reduxjs/toolkit": "^1.9.1",
+    "axios": "^1.2.3",
     "emotion-normalize": "^11.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-redux": "^8.0.5",
-    "react-router-dom": "^6.4.3"
+    "react-router-dom": "^6.4.3",
+    "redux": "^4.2.0"
   },
   "devDependencies": {
     "@types/node": "^18.11.9",
