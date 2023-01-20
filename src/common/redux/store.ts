@@ -2,10 +2,10 @@ import { configureStore, Middleware } from '@reduxjs/toolkit';
 import { useDispatch } from 'react-redux';
 import logger from 'redux-logger';
 
-import exampleSlice from 'src/features/example/context/exampleSlice';
+import repositorySlice from 'src/features/repository/context/repositorySlice';
 
 const rootReducer = {
-	example: exampleSlice,
+	repository: repositorySlice,
 };
 
 const customMiddleware: Middleware[] = [];
