@@ -1,11 +1,10 @@
 import { createBrowserRouter } from 'react-router-dom';
 
-import FeatureExample from 'src/features/example/components/FeatureExample';
-import CommonExample from 'src/common/components/CommonExample';
+import Layout from 'src/common/layout/Layout';
+import SearchRepository from 'src/pages/SearchRepository';
 
 const router = createBrowserRouter([
-	{ path: '/', element: <CommonExample /> },
-	{ path: '/example', element: <FeatureExample /> },
+	{ path: '/', element: <Layout />, children: [{ index: true, element: <SearchRepository /> }] },
 ]);
 
 export default router;
