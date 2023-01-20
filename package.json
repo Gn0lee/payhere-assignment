@@ -11,6 +11,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@ant-design/icons": "^5.0.1",
     "@emotion/react": "^11.10.5",
     "@reduxjs/toolkit": "^1.9.1",
     "antd": "^5.1.6",
@@ -32,7 +33,7 @@
     "@typescript-eslint/parser": "^5.44.0",
     "@vitejs/plugin-react": "^2.2.0",
     "eslint-config-airbnb": "^19.0.4",
-    "eslint-config-prettier": "^8.5.0",
+    "eslint-config-prettier": "^8.6.0",
     "eslint-import-resolver-typescript": "^3.5.2",
     "eslint-import-resolver-webpack": "^0.13.2",
     "eslint-plugin-import": "^2.26.0",

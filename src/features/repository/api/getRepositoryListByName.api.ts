@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { GetRepositoryListApiResponse } from 'src/features/repository/types/getRepositoryListByName.types';
 
 interface GetRepositoryByNameProps {
 	searchValue: string;
@@ -6,17 +7,15 @@ interface GetRepositoryByNameProps {
 	page: number;
 }
 
-const getRepositoryByNameApi = ({ searchValue }: GetRepositoryByNameProps) => {
-	const { data } = await axios.get<GetNotificationListApiResponse>(
-		`${process.env.REACT_APP_BASE_URL}/user/notification-list`,
-		{
-			params: {
-				pageNum,
-				pageSize,
-			},
-		}
-	);
+const getRepositoryListByNameApi = async ({ searchValue, perPage, page }: GetRepositoryByNameProps) => {
+	const { data } = await axios.get<GetRepositoryListApiResponse>('https://api.github.com/search/repositories', {
+		params: {
+			q: `is:public ${searchValue} in:name`,
+			per_page: perPage,
+			page,
+		},
+	});
 	return data;
 };
 
-export default getRepositoryByNameApi;
+export default getRepositoryListByNameApi;

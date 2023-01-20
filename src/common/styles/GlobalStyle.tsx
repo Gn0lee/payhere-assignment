@@ -11,7 +11,17 @@ export default function GlobalStyle() {
 					padding: 0;
 					margin: 0;
 					background: white;
-					min-height: 100%;
+					width: 100%;
+					height: 100%;
+				}
+
+				#root {
+					width: 100%;
+					height: 100%;
+				}
+
+				* {
+					box-sizing: border-box;
 				}
 			`}
 		/>

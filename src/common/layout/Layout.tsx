@@ -18,10 +18,15 @@ const container = css`
 	display: flex;
 	flex-direction: column;
 	gap: 0;
+
+	width: 100%;
+	height: 100%;
 `;
 
 const outletContainer = css`
 	flex: auto;
 
 	padding: 32px;
+
+	overflow: auto;
 `;

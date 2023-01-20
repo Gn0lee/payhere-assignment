@@ -15,7 +15,7 @@ const container = css`
 	align-items: center;
 
 	width: 100%;
-	height: 48px;
+	height: 64px;
 
 	padding: 8px 16px 8px 16px;
 
