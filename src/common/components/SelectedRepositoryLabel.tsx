@@ -52,4 +52,6 @@ const labelSt = css`
 
 	font-size: 14px;
 	font-weight: bold;
+
+	cursor: default;
 `;

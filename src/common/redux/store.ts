@@ -3,9 +3,11 @@ import { useDispatch } from 'react-redux';
 import logger from 'redux-logger';
 
 import repositorySlice from 'src/features/repository/context/repositorySlice';
+import issuesSlice from 'src/features/issues/context/issuesSlice';
 
 const rootReducer = {
 	repository: repositorySlice,
+	issues: issuesSlice,
 };
 
 const customMiddleware: Middleware[] = [];

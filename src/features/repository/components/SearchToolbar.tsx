@@ -9,7 +9,7 @@ import { RootState, useAppDispatch } from 'src/common/redux/store';
 
 import { RepositoryData, setSearchValue } from 'src/features/repository/context/repositorySlice';
 import { getRepositoryListByNameThunk } from 'src/features/repository/thunk/getRepositoryListByName.thunk';
-import SelectedRepositoryLabel from 'src/features/repository/components/SelectedRepositoryLabel';
+import SelectedRepositoryLabel from 'src/common/components/SelectedRepositoryLabel';
 import SelectSearchPerPage from 'src/features/repository/components/SelectSearchPerPage';
 
 export default function SearchToolbar() {
