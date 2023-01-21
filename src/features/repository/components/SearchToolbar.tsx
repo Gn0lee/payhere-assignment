@@ -7,12 +7,12 @@ import { RootState, useAppDispatch } from 'src/common/redux/store';
 
 import { RepositoryData, setSearchValue } from 'src/features/repository/context/repositorySlice';
 import { getRepositoryListByNameThunk } from 'src/features/repository/thunk/getRepositoryListByName.thunk';
-import SelectSearchPerPage from 'src/features/repository/components/SelectSearchPerPage';
+// import SelectSearchPerPage from 'src/features/repository/components/SelectSearchPerPage';
 
 export default function SearchToolbar() {
 	const dispatch = useAppDispatch();
 
-	const { searchValue, perPage } = useSelector<RootState, RepositoryData>(state => state.repository);
+	const { searchValue, perPage, page } = useSelector<RootState, RepositoryData>(state => state.repository);
 
 	const searchValueChangeHandler: React.ChangeEventHandler<HTMLInputElement> = event => {
 		dispatch(setSearchValue(event.target.value));
@@ -26,7 +26,7 @@ export default function SearchToolbar() {
 		return () => {
 			clearTimeout(searchTimeout);
 		};
-	}, [dispatch, searchValue, perPage]);
+	}, [dispatch, searchValue, perPage, page]);
 
 	return (
 		<div>
@@ -37,7 +37,6 @@ export default function SearchToolbar() {
 				onChange={searchValueChangeHandler}
 				value={searchValue}
 				suffix={<SearchOutlined />}
-				addonAfter={<SelectSearchPerPage />}
 			/>
 		</div>
 	);

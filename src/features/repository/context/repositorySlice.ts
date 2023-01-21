@@ -15,7 +15,7 @@ export interface RepositoryData {
 }
 
 const initialState: RepositoryData = {
-	page: 0,
+	page: 1,
 	perPage: 10,
 	searchValue: '',
 	repositoryList: [],
@@ -41,7 +41,7 @@ const repositorySlice = createSlice({
 	},
 	extraReducers(builder) {
 		builder.addCase(getRepositoryListByNameThunk.pending, state => {
-			return { ...state, isLoading: true, isLoaded: false, hasError: false };
+			return { ...state, isLoading: true, hasError: false };
 		});
 
 		builder.addCase(getRepositoryListByNameThunk.rejected, state => {

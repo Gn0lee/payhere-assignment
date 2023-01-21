@@ -75,7 +75,11 @@ export default function RepositoryTable() {
 			title: '깃헙',
 			dataIndex: 'html_url',
 			key: 'html_url',
-			render: value => <a href={value}>바로가기</a>,
+			render: value => (
+				<a href={value} target="_blank" rel="noreferrer">
+					바로가기
+				</a>
+			),
 			width: 100,
 		},
 	];
@@ -100,7 +104,7 @@ export default function RepositoryTable() {
 				}}
 				pagination={false}
 				scroll={{ y: 1000, x: 300 }}
-				style={{ maxWidth: 1500, minWidth: 310, height: 1000 }}
+				style={{ maxWidth: 2000, minWidth: 310 }}
 			/>
 		</ConfigProvider>
 	);
