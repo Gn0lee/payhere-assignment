@@ -1,0 +1,1 @@
+export const MAX_SELECT_REPOSITORY_NUM = 4;

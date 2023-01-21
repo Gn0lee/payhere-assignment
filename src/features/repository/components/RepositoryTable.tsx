@@ -2,12 +2,18 @@ import React from 'react';
 import { css } from '@emotion/react';
 import { useSelector } from 'react-redux';
 import moment from 'moment';
-import { Table, ConfigProvider } from 'antd';
+import { Table, ConfigProvider, notification } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import { LoadingOutlined } from '@ant-design/icons';
 
-import { RootState } from 'src/common/redux/store';
-import { RepositoryData } from 'src/features/repository/context/repositorySlice';
+import { RootState, useAppDispatch } from 'src/common/redux/store';
+
+import {
+	addSelectedRepository,
+	deleteSelectedRepository,
+	RepositoryData,
+} from 'src/features/repository/context/repositorySlice';
+import { MAX_SELECT_REPOSITORY_NUM } from 'src/features/repository/data/constants';
 
 interface RepositoryTableData {
 	key: React.Key;
@@ -35,6 +41,10 @@ const customizeRenderEmpty = () => (
 );
 
 export default function RepositoryTable() {
+	const dispatch = useAppDispatch();
+
+	const [api, contextHolder] = notification.useNotification();
+
 	const repositoryTableData = useSelector<RootState, RepositoryTableData[]>(state =>
 		state.repository.repositoryList.map(el => ({
 			key: el.id,
@@ -55,7 +65,7 @@ export default function RepositoryTable() {
 		}))
 	);
 
-	const { isLoading } = useSelector<RootState, RepositoryData>(state => state.repository);
+	const { isLoading, selectedRepositoryList } = useSelector<RootState, RepositoryData>(state => state.repository);
 
 	const columns: ColumnsType<RepositoryTableData> = [
 		Table.SELECTION_COLUMN,
@@ -87,26 +97,43 @@ export default function RepositoryTable() {
 	const expandedRowRender = (record: RepositoryTableData) => <p style={{ margin: 0 }}>{record.description}</p>;
 
 	return (
-		<ConfigProvider renderEmpty={customizeRenderEmpty}>
-			<Table
-				dataSource={isLoading ? undefined : repositoryTableData}
-				columns={columns}
-				expandable={{
-					rowExpandable: record => record.description !== null,
-					expandedRowRender,
-				}}
-				rowSelection={{
-					type: 'checkbox',
-					onChange: (selectedRowKeys, selectedRows, info) => {
-						console.log(selectedRowKeys, selectedRows, info);
-					},
-					hideSelectAll: true,
-				}}
-				pagination={false}
-				scroll={{ y: 1000, x: 300 }}
-				style={{ maxWidth: 2000, minWidth: 310 }}
-			/>
-		</ConfigProvider>
+		<>
+			{contextHolder}
+			<ConfigProvider renderEmpty={customizeRenderEmpty}>
+				<Table
+					dataSource={isLoading ? undefined : repositoryTableData}
+					columns={columns}
+					expandable={{
+						rowExpandable: record => record.description !== null,
+						expandedRowRender,
+					}}
+					rowSelection={{
+						type: 'checkbox',
+						hideSelectAll: true,
+						onSelect: (record, selected) => {
+							if (selected && selectedRepositoryList.length < MAX_SELECT_REPOSITORY_NUM) {
+								dispatch(addSelectedRepository({ id: record.id, fullName: record.fullName, name: record.name }));
+								return;
+							}
+
+							if (selected && selectedRepositoryList.length === MAX_SELECT_REPOSITORY_NUM) {
+								api.error({
+									message: '등록 최대개수 초과',
+									description: `등록 가능한 최대 레포지토리 개수는 ${MAX_SELECT_REPOSITORY_NUM}개 입니다.`,
+								});
+								return;
+							}
+
+							dispatch(deleteSelectedRepository(record.id));
+						},
+						selectedRowKeys: selectedRepositoryList.map(el => el.id),
+					}}
+					pagination={false}
+					scroll={{ y: 1000, x: 300 }}
+					style={{ maxWidth: 2000, minWidth: 310 }}
+				/>
+			</ConfigProvider>
+		</>
 	);
 }
 

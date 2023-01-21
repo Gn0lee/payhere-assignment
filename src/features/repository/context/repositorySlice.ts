@@ -2,6 +2,17 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import type { RepositoryInfo } from 'src/features/repository/types/getRepositoryListByName.types';
 import { getRepositoryListByNameThunk } from 'src/features/repository/thunk/getRepositoryListByName.thunk';
+import { makeRandomColor } from 'src/features/repository/utils/randomColor';
+
+interface SelectedRepositoryPayload {
+	id: number;
+	fullName: string;
+	name: string;
+}
+
+export interface SelectedRepositoryInfo extends SelectedRepositoryPayload {
+	color: string;
+}
 
 export interface RepositoryData {
 	page: number;
@@ -12,6 +23,7 @@ export interface RepositoryData {
 	isLoaded: boolean;
 	totalCount: number;
 	hasError: boolean;
+	selectedRepositoryList: SelectedRepositoryInfo[];
 }
 
 const initialState: RepositoryData = {
@@ -23,6 +35,7 @@ const initialState: RepositoryData = {
 	isLoading: false,
 	totalCount: 0,
 	hasError: false,
+	selectedRepositoryList: [],
 };
 
 const repositorySlice = createSlice({
@@ -37,6 +50,18 @@ const repositorySlice = createSlice({
 		},
 		setPerPage: (state, action: PayloadAction<number>): RepositoryData => {
 			return { ...state, perPage: action.payload };
+		},
+		addSelectedRepository: (state, action: PayloadAction<SelectedRepositoryPayload>) => {
+			return {
+				...state,
+				selectedRepositoryList: state.selectedRepositoryList.concat({
+					...action.payload,
+					color: makeRandomColor(state.selectedRepositoryList.map(el => el.color)),
+				}),
+			};
+		},
+		deleteSelectedRepository: (state, action: PayloadAction<number>) => {
+			return { ...state, selectedRepositoryList: state.selectedRepositoryList.filter(el => el.id !== action.payload) };
 		},
 	},
 	extraReducers(builder) {
@@ -55,4 +80,5 @@ const repositorySlice = createSlice({
 });
 
 export default repositorySlice.reducer;
-export const { setSearchValue, setPage, setPerPage } = repositorySlice.actions;
+export const { setSearchValue, setPage, setPerPage, deleteSelectedRepository, addSelectedRepository } =
+	repositorySlice.actions;
