@@ -3,6 +3,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import type { RepositoryInfo } from 'src/features/repository/types/getRepositoryListByName.types';
 import { getRepositoryListByNameThunk } from 'src/features/repository/thunk/getRepositoryListByName.thunk';
 import { makeRandomColor } from 'src/features/repository/utils/randomColor';
+import { KEY_SELECT_REPOSITORY } from 'src/features/repository/data/constants';
 
 interface SelectedRepositoryPayload {
 	id: number;
@@ -52,16 +53,28 @@ const repositorySlice = createSlice({
 			return { ...state, perPage: action.payload };
 		},
 		addSelectedRepository: (state, action: PayloadAction<SelectedRepositoryPayload>) => {
+			const newSelectedRepositoryList = state.selectedRepositoryList.concat({
+				...action.payload,
+				color: makeRandomColor(state.selectedRepositoryList.map(el => el.color)),
+			});
+
+			window.localStorage.setItem(KEY_SELECT_REPOSITORY, JSON.stringify(newSelectedRepositoryList));
+
 			return {
 				...state,
-				selectedRepositoryList: state.selectedRepositoryList.concat({
-					...action.payload,
-					color: makeRandomColor(state.selectedRepositoryList.map(el => el.color)),
-				}),
+				selectedRepositoryList: newSelectedRepositoryList,
 			};
 		},
 		deleteSelectedRepository: (state, action: PayloadAction<number>) => {
-			return { ...state, selectedRepositoryList: state.selectedRepositoryList.filter(el => el.id !== action.payload) };
+			const newSelectedRepositoryList = state.selectedRepositoryList.filter(el => el.id !== action.payload);
+
+			if (newSelectedRepositoryList.length > 0) {
+				window.localStorage.setItem(KEY_SELECT_REPOSITORY, JSON.stringify(newSelectedRepositoryList));
+			} else {
+				window.localStorage.removeItem(KEY_SELECT_REPOSITORY);
+			}
+
+			return { ...state, selectedRepositoryList: newSelectedRepositoryList };
 		},
 	},
 	extraReducers(builder) {

@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import { Tooltip } from 'antd';
-import { DeleteOutlined, CloseCircleFilled } from '@ant-design/icons';
+import { CloseCircleFilled } from '@ant-design/icons';
 
 import { useAppDispatch } from 'src/common/redux/store';
 
