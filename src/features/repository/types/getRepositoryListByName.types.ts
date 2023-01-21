@@ -35,7 +35,7 @@ export interface RepositoryInfo {
 	private: boolean;
 	owner: Owner;
 	html_url: string;
-	description: string;
+	description: string | null;
 	fork: boolean;
 	url: string;
 	forks_url: string;

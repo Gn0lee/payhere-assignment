@@ -21,7 +21,7 @@ export default function SearchToolbar() {
 	useEffect(() => {
 		const searchTimeout = setTimeout(() => {
 			dispatch(getRepositoryListByNameThunk());
-		}, 500);
+		}, 800);
 
 		return () => {
 			clearTimeout(searchTimeout);
