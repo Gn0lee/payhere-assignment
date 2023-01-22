@@ -11,6 +11,7 @@ import { IssuesData } from 'src/features/issues/context/issuesSlice';
 import { getIssuesByRepoThunk } from 'src/features/issues/thunk/getIssuesByRepo.thunk';
 import IssuesToolbar from 'src/features/issues/components/IssuesToolbar';
 import IssuesTable from 'src/features/issues/components/IssuesTable';
+import IssuesTablePagination from 'src/features/issues/components/IssuesTablePagination';
 
 export default function Issues() {
 	const dispatch = useAppDispatch();
@@ -42,6 +43,7 @@ export default function Issues() {
 			<div css={titleSt}>이슈 리스트</div>
 			<IssuesToolbar />
 			<IssuesTable />
+			<IssuesTablePagination />
 		</div>
 	);
 }

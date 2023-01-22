@@ -1,16 +1,24 @@
 import { css } from '@emotion/react';
-import { useLayoutEffect } from 'react';
+import { useEffect, useLayoutEffect } from 'react';
+import { useSelector } from 'react-redux';
 
-import { useAppDispatch } from 'src/common/redux/store';
+import { RootState, useAppDispatch } from 'src/common/redux/store';
 import { KEY_SELECT_REPOSITORY } from 'src/common/data/constants';
 
 import SearchToolbar from 'src/features/repository/components/SearchToolbar';
 import RepositoryTable from 'src/features/repository/components/RepositoryTable';
 import RepositoryTablePagination from 'src/features/repository/components/RepositoryTablePagination';
-import { SelectedRepositoryInfo, setSelectedRepositoryList } from 'src/features/repository/context/repositorySlice';
+import {
+	RepositoryData,
+	SelectedRepositoryInfo,
+	setSelectedRepositoryList,
+} from 'src/features/repository/context/repositorySlice';
+import { getRepositoryListByNameThunk } from 'src/features/repository/thunk/getRepositoryListByName.thunk';
 
-export default function SearchRepository() {
+export default function Repository() {
 	const dispatch = useAppDispatch();
+
+	const { searchValue, perPage, page } = useSelector<RootState, RepositoryData>(state => state.repository);
 
 	useLayoutEffect(() => {
 		const storedSelectedRepositoryList = JSON.parse(
@@ -19,6 +27,16 @@ export default function SearchRepository() {
 
 		dispatch(setSelectedRepositoryList(storedSelectedRepositoryList));
 	}, [dispatch]);
+
+	useEffect(() => {
+		const searchTimeout = setTimeout(() => {
+			dispatch(getRepositoryListByNameThunk());
+		}, 800);
+
+		return () => {
+			clearTimeout(searchTimeout);
+		};
+	}, [dispatch, searchValue, perPage, page]);
 
 	return (
 		<div css={container}>

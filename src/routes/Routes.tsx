@@ -1,7 +1,7 @@
 import { createBrowserRouter } from 'react-router-dom';
 
 import Layout from 'src/common/layout/Layout';
-import SearchRepository from 'src/pages/SearchRepository';
+import Repository from 'src/pages/Repository';
 import Issues from 'src/pages/Issues';
 
 const router = createBrowserRouter([
@@ -9,7 +9,7 @@ const router = createBrowserRouter([
 		path: '/',
 		element: <Layout />,
 		children: [
-			{ index: true, element: <SearchRepository /> },
+			{ index: true, element: <Repository /> },
 			{ path: 'issues', element: <Issues /> },
 		],
 	},

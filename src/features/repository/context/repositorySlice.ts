@@ -33,7 +33,7 @@ const initialState: RepositoryData = {
 	searchValue: '',
 	repositoryList: [],
 	isLoaded: false,
-	isLoading: false,
+	isLoading: true,
 	totalCount: 0,
 	hasError: false,
 	selectedRepositoryList: [],
@@ -96,6 +96,7 @@ const repositorySlice = createSlice({
 });
 
 export default repositorySlice.reducer;
+
 export const {
 	setSearchValue,
 	setPage,

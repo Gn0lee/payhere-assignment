@@ -66,7 +66,7 @@ export default function RepositoryTable() {
 		{ title: '전체 이름', dataIndex: 'fullName', key: 'fullName', width: 200, ellipsis: true, align: 'center' },
 		{ title: '소유자', dataIndex: 'owner', key: 'owner', width: 80, align: 'center' },
 		{ title: '언어', dataIndex: 'language', key: 'language', width: 110, align: 'center' },
-		{ title: 'Issues', dataIndex: 'openIssuesCount', key: 'openIssuesCount', width: 80, align: 'center' },
+		{ title: 'Open Issues', dataIndex: 'openIssuesCount', key: 'openIssuesCount', width: 80, align: 'center' },
 		{ title: 'Stars', dataIndex: 'stargazersCount', key: 'stargazersCount', width: 80, align: 'center' },
 		{ title: 'Watchers', dataIndex: 'watchersCount', key: 'watchersCount', width: 100, align: 'center' },
 		{ title: 'forks', dataIndex: 'forksCount', key: 'forksCount', width: 80, align: 'center' },
@@ -91,7 +91,7 @@ export default function RepositoryTable() {
 	return (
 		<>
 			{contextHolder}
-			<ConfigProvider renderEmpty={LoadingStatus}>
+			<ConfigProvider renderEmpty={isLoading ? LoadingStatus : undefined}>
 				<Table
 					dataSource={isLoading ? undefined : repositoryTableData}
 					columns={columns}

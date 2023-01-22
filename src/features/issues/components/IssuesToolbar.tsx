@@ -1,17 +1,21 @@
 import { css } from '@emotion/react';
+import React from 'react';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { Button } from 'antd';
 
 import { RootState } from 'src/common/redux/store';
 import SelectedRepositoryLabel from 'src/common/components/SelectedRepositoryLabel';
 
 import type { RepositoryData } from 'src/features/repository/context/repositorySlice';
-import React from 'react';
 
 export default function IssuesToolbar() {
+	const navigate = useNavigate();
+
 	const { selectedRepositoryList } = useSelector<RootState, RepositoryData>(state => state.repository);
 
 	return (
-		<div css={container}>
+		<div css={container(selectedRepositoryList.length < 1)}>
 			{selectedRepositoryList.length > 0 ? (
 				<div css={labelContainer}>
 					{selectedRepositoryList.map(el => (
@@ -19,14 +23,17 @@ export default function IssuesToolbar() {
 					))}
 				</div>
 			) : null}
+			<Button onClick={() => navigate('/')} css={buttonCss}>
+				뒤로가기
+			</Button>
 		</div>
 	);
 }
 
-const container = css`
+const container = (isEmpty: boolean) => css`
 	display: flex;
 	align-items: center;
-	justify-content: space-between;
+	justify-content: ${isEmpty ? 'flex-end' : 'space-between'};
 
 	max-width: 2000px;
 
@@ -50,5 +57,11 @@ const labelContainer = css`
 	@media (max-width: 576px) {
 		flex-wrap: wrap;
 		height: auto;
+	}
+`;
+
+const buttonCss = css`
+	@media (max-width: 922px) {
+		align-self: flex-end;
 	}
 `;

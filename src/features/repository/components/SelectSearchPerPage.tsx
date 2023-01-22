@@ -18,12 +18,11 @@ export default function SelectSearchPerPage() {
 	};
 
 	return (
-		<Select defaultValue="10" onChange={perPageChangeHandler} value={perPage.toString()}>
-			<Option value="10">10</Option>
-			<Option value="20">20</Option>
-			<Option value="30">30</Option>
-			<Option value="50">50</Option>
-			<Option value="100">100</Option>
+		<Select onChange={perPageChangeHandler} value={perPage.toString()}>
+			<Option value="10">10/page</Option>
+			<Option value="20">20/page</Option>
+			<Option value="50">50/page</Option>
+			<Option value="100">100/page</Option>
 		</Select>
 	);
 }

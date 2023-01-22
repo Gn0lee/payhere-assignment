@@ -18,15 +18,15 @@ export const getIssuesByRepoThunk = createAsyncThunk<GetIssuesByRepoThunkResult,
 		} = thunkAPI.getState();
 
 		try {
+			if (selectedRepositoryList.length < 1) {
+				return { issues: [], totalCount: 0 };
+			}
+
 			const { total_count: totalCount, items } = await getIssuesByRepoApi({
 				repos: selectedRepositoryList,
 				perPage,
 				page,
 			});
-
-			if (selectedRepositoryList.length < 1) {
-				// todo: 선택된 레포가 없다는 Noti 팝업 시키기
-			}
 
 			return { issues: items, totalCount };
 

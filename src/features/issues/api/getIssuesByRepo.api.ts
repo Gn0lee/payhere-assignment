@@ -12,7 +12,7 @@ interface GetRepositoryByNameProps {
 const getIssuesByRepoApi = async ({ repos, perPage, page }: GetRepositoryByNameProps) => {
 	const { data } = await axios.get<GetIssuesByRepoApiResponse>('https://api.github.com/search/issues', {
 		params: {
-			q: `is:issue ${repos.map(repo => `repo:${repo.fullName}`).join(' ')}`,
+			q: repos.length > 0 ? `is:issue ${repos.map(repo => `repo:${repo.fullName}`).join(' ')}` : undefined,
 			per_page: perPage,
 			page,
 			order: 'desc',

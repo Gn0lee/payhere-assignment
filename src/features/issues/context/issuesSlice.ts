@@ -17,7 +17,7 @@ const initialState: IssuesData = {
 	page: 1,
 	perPage: 10,
 	isLoaded: false,
-	isLoading: false,
+	isLoading: true,
 	totalCount: 0,
 	hasError: false,
 	issueList: [],
@@ -26,7 +26,14 @@ const initialState: IssuesData = {
 const issuesSlice = createSlice({
 	name: 'issues',
 	initialState,
-	reducers: {},
+	reducers: {
+		setPage: (state, action: PayloadAction<number>): IssuesData => {
+			return { ...state, page: action.payload };
+		},
+		setPerPage: (state, action: PayloadAction<number>): IssuesData => {
+			return { ...state, perPage: action.payload };
+		},
+	},
 	extraReducers(builder) {
 		builder.addCase(getIssuesByRepoThunk.pending, state => {
 			return { ...state, isLoading: true, hasError: false };
@@ -50,3 +57,5 @@ const issuesSlice = createSlice({
 });
 
 export default issuesSlice.reducer;
+
+export const { setPage, setPerPage } = issuesSlice.actions;
