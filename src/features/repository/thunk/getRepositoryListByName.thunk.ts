@@ -26,8 +26,9 @@ export const getRepositoryListByNameThunk = createAsyncThunk<
 		});
 
 		return { repositoryList: items, totalCount };
+
 		// eslint-disable-next-line
 	} catch (error: any) {
-		return thunkAPI.rejectWithValue(error.response.data);
+		return thunkAPI.rejectWithValue(error.toString());
 	}
 });

@@ -3,7 +3,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import type { RepositoryInfo } from 'src/features/repository/types/getRepositoryListByName.types';
 import { getRepositoryListByNameThunk } from 'src/features/repository/thunk/getRepositoryListByName.thunk';
 import { makeRandomColor } from 'src/features/repository/utils/randomColor';
-import { KEY_SELECT_REPOSITORY } from 'src/features/repository/data/constants';
+import { KEY_SELECT_REPOSITORY } from 'src/common/data/constants';
 
 interface SelectedRepositoryPayload {
 	id: number;
@@ -33,7 +33,7 @@ const initialState: RepositoryData = {
 	searchValue: '',
 	repositoryList: [],
 	isLoaded: false,
-	isLoading: false,
+	isLoading: true,
 	totalCount: 0,
 	hasError: false,
 	selectedRepositoryList: [],
@@ -76,6 +76,9 @@ const repositorySlice = createSlice({
 
 			return { ...state, selectedRepositoryList: newSelectedRepositoryList };
 		},
+		setSelectedRepositoryList: (state, action: PayloadAction<SelectedRepositoryInfo[]>) => {
+			return { ...state, selectedRepositoryList: action.payload };
+		},
 	},
 	extraReducers(builder) {
 		builder.addCase(getRepositoryListByNameThunk.pending, state => {
@@ -93,5 +96,12 @@ const repositorySlice = createSlice({
 });
 
 export default repositorySlice.reducer;
-export const { setSearchValue, setPage, setPerPage, deleteSelectedRepository, addSelectedRepository } =
-	repositorySlice.actions;
+
+export const {
+	setSearchValue,
+	setPage,
+	setPerPage,
+	deleteSelectedRepository,
+	addSelectedRepository,
+	setSelectedRepositoryList,
+} = repositorySlice.actions;

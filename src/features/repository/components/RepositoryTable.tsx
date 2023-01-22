@@ -1,12 +1,11 @@
 import React from 'react';
-import { css } from '@emotion/react';
 import { useSelector } from 'react-redux';
 import moment from 'moment';
 import { Table, ConfigProvider, notification } from 'antd';
 import { ColumnsType } from 'antd/es/table';
-import { LoadingOutlined } from '@ant-design/icons';
 
 import { RootState, useAppDispatch } from 'src/common/redux/store';
+import LoadingStatus from 'src/common/components/LoadingStatus';
 
 import {
 	addSelectedRepository,
@@ -32,13 +31,6 @@ interface RepositoryTableData {
 	watchersCount: number;
 	forksCount: number;
 }
-
-const customizeRenderEmpty = () => (
-	<div css={emptyContainer}>
-		<LoadingOutlined style={{ fontSize: 40, color: 'black' }} />
-		<div>검색중..</div>
-	</div>
-);
 
 export default function RepositoryTable() {
 	const dispatch = useAppDispatch();
@@ -74,7 +66,7 @@ export default function RepositoryTable() {
 		{ title: '전체 이름', dataIndex: 'fullName', key: 'fullName', width: 200, ellipsis: true, align: 'center' },
 		{ title: '소유자', dataIndex: 'owner', key: 'owner', width: 80, align: 'center' },
 		{ title: '언어', dataIndex: 'language', key: 'language', width: 110, align: 'center' },
-		{ title: 'Issues', dataIndex: 'openIssuesCount', key: 'openIssuesCount', width: 80, align: 'center' },
+		{ title: 'Open Issues', dataIndex: 'openIssuesCount', key: 'openIssuesCount', width: 80, align: 'center' },
 		{ title: 'Stars', dataIndex: 'stargazersCount', key: 'stargazersCount', width: 80, align: 'center' },
 		{ title: 'Watchers', dataIndex: 'watchersCount', key: 'watchersCount', width: 100, align: 'center' },
 		{ title: 'forks', dataIndex: 'forksCount', key: 'forksCount', width: 80, align: 'center' },
@@ -99,7 +91,7 @@ export default function RepositoryTable() {
 	return (
 		<>
 			{contextHolder}
-			<ConfigProvider renderEmpty={customizeRenderEmpty}>
+			<ConfigProvider renderEmpty={isLoading ? LoadingStatus : undefined}>
 				<Table
 					dataSource={isLoading ? undefined : repositoryTableData}
 					columns={columns}
@@ -136,18 +128,3 @@ export default function RepositoryTable() {
 		</>
 	);
 }
-
-const emptyContainer = css`
-	display: flex;
-	flex-direction: column;
-	gap: 48px;
-	align-items: center;
-
-	padding: 32px;
-
-	& > div {
-		color: black;
-		font-size: 20px;
-		font-weight: bold;
-	}
-`;

@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { Button, Input } from 'antd';
@@ -8,38 +8,25 @@ import { SearchOutlined } from '@ant-design/icons';
 import { RootState, useAppDispatch } from 'src/common/redux/store';
 
 import { RepositoryData, setSearchValue } from 'src/features/repository/context/repositorySlice';
-import { getRepositoryListByNameThunk } from 'src/features/repository/thunk/getRepositoryListByName.thunk';
-import SelectedRepositoryLabel from 'src/features/repository/components/SelectedRepositoryLabel';
+
+import SelectedRepositoryLabel from 'src/common/components/SelectedRepositoryLabel';
 import SelectSearchPerPage from 'src/features/repository/components/SelectSearchPerPage';
 
 export default function SearchToolbar() {
 	const dispatch = useAppDispatch();
 	const navigate = useNavigate();
 
-	const { searchValue, perPage, page, selectedRepositoryList } = useSelector<RootState, RepositoryData>(
-		state => state.repository
-	);
+	const { searchValue, selectedRepositoryList } = useSelector<RootState, RepositoryData>(state => state.repository);
 
 	const searchValueChangeHandler: React.ChangeEventHandler<HTMLInputElement> = event => {
 		dispatch(setSearchValue(event.target.value));
 	};
 
-	useEffect(() => {
-		const searchTimeout = setTimeout(() => {
-			dispatch(getRepositoryListByNameThunk());
-		}, 800);
-
-		return () => {
-			clearTimeout(searchTimeout);
-		};
-	}, [dispatch, searchValue, perPage, page]);
-
 	return (
 		<div css={container}>
 			<div css={searchContainer}>
 				<Input
-					style={{ minWidth: '150px', maxWidth: '500px' }}
-					placeholder="검색할 레포지토리 이름을 입력하세요"
+					placeholder="이름을 입력하세요"
 					allowClear
 					onChange={searchValueChangeHandler}
 					value={searchValue}
@@ -54,7 +41,7 @@ export default function SearchToolbar() {
 					</div>
 				) : null}
 			</div>
-			<Button disabled={selectedRepositoryList.length < 1} onClick={() => navigate('issues')}>
+			<Button disabled={selectedRepositoryList.length < 1} onClick={() => navigate('issues')} css={buttonCss}>
 				Issue로 이동
 			</Button>
 		</div>
@@ -100,5 +87,11 @@ const labelContainer = css`
 	@media (max-width: 576px) {
 		flex-wrap: wrap;
 		height: auto;
+	}
+`;
+
+const buttonCss = css`
+	@media (max-width: 922px) {
+		align-self: flex-end;
 	}
 `;
