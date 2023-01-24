@@ -36,6 +36,8 @@ npm run start:dev
 - Typescript
 - React
 - Redux-toolkit
+- react-router-dom
+- vite
 - emotion
 - axios
 - moment
