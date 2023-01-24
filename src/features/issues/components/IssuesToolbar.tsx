@@ -8,11 +8,16 @@ import { RootState } from 'src/common/redux/store';
 import SelectedRepositoryLabel from 'src/common/components/SelectedRepositoryLabel';
 
 import type { RepositoryData } from 'src/features/repository/context/repositorySlice';
+import type { IssuesData } from 'src/features/issues/context/issuesSlice';
 
 export default function IssuesToolbar() {
 	const navigate = useNavigate();
 
 	const { selectedRepositoryList } = useSelector<RootState, RepositoryData>(state => state.repository);
+
+	const { hasError } = useSelector<RootState, IssuesData>(state => state.issues);
+
+	if (hasError) return null;
 
 	return (
 		<div css={container(selectedRepositoryList.length < 1)}>

@@ -1,20 +1,23 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import moment from 'moment';
 import { Table, ConfigProvider, notification } from 'antd';
-import { ColumnsType } from 'antd/es/table';
+import type { ColumnsType } from 'antd/es/table';
+import type { SelectionSelectFn } from 'antd/es/table/interface';
 
 import { RootState, useAppDispatch } from 'src/common/redux/store';
 import LoadingStatus from 'src/common/components/LoadingStatus';
+import TableShortcutElement from 'src/common/components/TableShortcutElement';
+import { convertTimeFormat } from 'src/common/utils/timeFormatFunc';
 
 import {
 	addSelectedRepository,
 	deleteSelectedRepository,
 	RepositoryData,
 } from 'src/features/repository/context/repositorySlice';
+import RepositoryDescriptionExpand from 'src/features/repository/components/RepositoryDescriptionExpand';
 import { MAX_SELECT_REPOSITORY_NUM } from 'src/features/repository/data/constants';
 
-interface RepositoryTableData {
+export interface RepositoryTableData {
 	key: React.Key;
 	name: string;
 	language: string;
@@ -48,16 +51,18 @@ export default function RepositoryTable() {
 			fullName: el.full_name,
 			owner: el.owner.login,
 			openIssuesCount: el.open_issues_count,
-			createdAt: moment(el.created_at).utcOffset('+UTC09:00').format('YYYY.MM.DD hh:mm'),
-			updatedAt: moment(el.updated_at).utcOffset('+UTC09:00').format('YYYY.MM.DD hh:mm'),
-			pushedAt: moment(el.pushed_at).utcOffset('+UTC09:00').format('YYYY.MM.DD hh:mm'),
+			createdAt: convertTimeFormat(el.created_at),
+			updatedAt: convertTimeFormat(el.updated_at),
+			pushedAt: convertTimeFormat(el.pushed_at),
 			stargazersCount: el.stargazers_count,
 			watchersCount: el.watchers_count,
 			forksCount: el.forks_count,
 		}))
 	);
 
-	const { isLoading, selectedRepositoryList } = useSelector<RootState, RepositoryData>(state => state.repository);
+	const { isLoading, selectedRepositoryList, hasError } = useSelector<RootState, RepositoryData>(
+		state => state.repository
+	);
 
 	const columns: ColumnsType<RepositoryTableData> = [
 		Table.SELECTION_COLUMN,
@@ -77,16 +82,30 @@ export default function RepositoryTable() {
 			title: '깃헙',
 			dataIndex: 'html_url',
 			key: 'html_url',
-			render: value => (
-				<a href={value} target="_blank" rel="noreferrer">
-					바로가기
-				</a>
-			),
+			render: TableShortcutElement,
 			width: 100,
+			align: 'center',
 		},
 	];
 
-	const expandedRowRender = (record: RepositoryTableData) => <p style={{ margin: 0 }}>{record.description}</p>;
+	const repositorySelectHandler: SelectionSelectFn<RepositoryTableData> = (record, selected) => {
+		if (selected && selectedRepositoryList.length < MAX_SELECT_REPOSITORY_NUM) {
+			dispatch(addSelectedRepository({ id: record.id, fullName: record.fullName, name: record.name }));
+			return;
+		}
+
+		if (selected && selectedRepositoryList.length === MAX_SELECT_REPOSITORY_NUM) {
+			api.error({
+				message: '등록 최대개수 초과',
+				description: `등록 가능한 최대 레포지토리 개수는 ${MAX_SELECT_REPOSITORY_NUM}개 입니다.`,
+			});
+			return;
+		}
+
+		dispatch(deleteSelectedRepository(record.id));
+	};
+
+	if (hasError) return <h2>에러가 발생하였습니다. 새로고침으로 다시 시도해 주세요.</h2>;
 
 	return (
 		<>
@@ -97,27 +116,12 @@ export default function RepositoryTable() {
 					columns={columns}
 					expandable={{
 						rowExpandable: record => record.description !== null,
-						expandedRowRender,
+						expandedRowRender: RepositoryDescriptionExpand,
 					}}
 					rowSelection={{
 						type: 'checkbox',
 						hideSelectAll: true,
-						onSelect: (record, selected) => {
-							if (selected && selectedRepositoryList.length < MAX_SELECT_REPOSITORY_NUM) {
-								dispatch(addSelectedRepository({ id: record.id, fullName: record.fullName, name: record.name }));
-								return;
-							}
-
-							if (selected && selectedRepositoryList.length === MAX_SELECT_REPOSITORY_NUM) {
-								api.error({
-									message: '등록 최대개수 초과',
-									description: `등록 가능한 최대 레포지토리 개수는 ${MAX_SELECT_REPOSITORY_NUM}개 입니다.`,
-								});
-								return;
-							}
-
-							dispatch(deleteSelectedRepository(record.id));
-						},
+						onSelect: repositorySelectHandler,
 						selectedRowKeys: selectedRepositoryList.map(el => el.id),
 					}}
 					pagination={false}

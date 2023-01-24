@@ -11,7 +11,7 @@ import { setPerPage, setPage } from 'src/features/issues/context/issuesSlice';
 export default function IssuesTablePagination() {
 	const dispatch = useAppDispatch();
 
-	const { perPage, totalCount, page, isLoaded } = useSelector<RootState, IssuesData>(state => state.issues);
+	const { perPage, totalCount, page, isLoaded, hasError } = useSelector<RootState, IssuesData>(state => state.issues);
 
 	const sizeChangeHandler: PaginationProps['onShowSizeChange'] = (_, pageSize) => {
 		dispatch(setPerPage(pageSize));
@@ -21,7 +21,7 @@ export default function IssuesTablePagination() {
 		dispatch(setPage(value));
 	};
 
-	if (!isLoaded) return null;
+	if (!isLoaded || hasError) return null;
 
 	return (
 		<div css={container}>

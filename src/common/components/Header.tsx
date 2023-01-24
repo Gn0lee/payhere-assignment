@@ -17,7 +17,7 @@ const container = css`
 	width: 100%;
 	height: 64px;
 
-	padding: 8px 16px 8px 16px;
+	padding: 8px 32px 8px 32px;
 
 	background-color: #348bf4;
 `;

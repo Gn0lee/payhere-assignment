@@ -1,19 +1,19 @@
 import React from 'react';
 import { css } from '@emotion/react';
 import { useSelector } from 'react-redux';
-import moment from 'moment';
 import { Table, ConfigProvider, Select } from 'antd';
-import { ColumnsType } from 'antd/es/table';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
+import type { ColumnsType } from 'antd/es/table';
 
 import { RootState, useAppDispatch } from 'src/common/redux/store';
 import LoadingStatus from 'src/common/components/LoadingStatus';
+import TableShortcutElement from 'src/common/components/TableShortcutElement';
+import { convertTimeFormat } from 'src/common/utils/timeFormatFunc';
 
 import type { IssuesData } from 'src/features/issues/context/issuesSlice';
 import { setPerPage } from 'src/features/issues/context/issuesSlice';
+import IssueBodyExpand from 'src/features/issues/components/IssueBodyExpand';
 
-interface IssuesTableData {
+export interface IssuesTableData {
 	key: React.Key;
 	title: string;
 	repo: string;
@@ -39,10 +39,10 @@ export default function IssuesTable() {
 			html_url: el.html_url,
 			state: el.state,
 			comments: el.comments,
-			createdAt: moment(el.created_at).utcOffset('+UTC09:00').format('YYYY.MM.DD hh:mm'),
-			updatedAt: moment(el.updated_at).utcOffset('+UTC09:00').format('YYYY.MM.DD hh:mm'),
+			createdAt: convertTimeFormat(el.created_at),
+			updatedAt: convertTimeFormat(el.updated_at),
 			body: el.body,
-			closedAt: el.closed_at ? moment(el.closed_at).utcOffset('+UTC09:00').format('YYYY.MM.DD hh:mm') : '',
+			closedAt: convertTimeFormat(el.closed_at),
 			state_reason: el.state_reason,
 			score: el.score,
 		}))
@@ -65,12 +65,9 @@ export default function IssuesTable() {
 			title: '이슈',
 			dataIndex: 'html_url',
 			key: 'html_url',
-			render: value => (
-				<a href={value} target="_blank" rel="noreferrer">
-					바로가기
-				</a>
-			),
+			render: TableShortcutElement,
 			width: 100,
+			align: 'center',
 		},
 	];
 
@@ -78,13 +75,7 @@ export default function IssuesTable() {
 		dispatch(setPerPage(value));
 	};
 
-	const expandedRowRender = (record: IssuesTableData) => (
-		<div>
-			<ReactMarkdown remarkPlugins={[remarkGfm]}>{record.body}</ReactMarkdown>
-		</div>
-	);
-
-	if (hasError) return <div>에러가 발생하였습니다.</div>;
+	if (hasError) return <h2>에러가 발생하였습니다. 새로고침으로 다시 시도해 주세요.</h2>;
 
 	return (
 		<div css={container}>
@@ -102,7 +93,7 @@ export default function IssuesTable() {
 				<Table
 					dataSource={isLoading ? undefined : issuesTableData}
 					columns={columns}
-					expandable={{ rowExpandable: record => record.body !== '', expandedRowRender }}
+					expandable={{ rowExpandable: record => record.body !== '', expandedRowRender: IssueBodyExpand }}
 					pagination={false}
 					scroll={{ y: 1000, x: 300 }}
 					style={{ maxWidth: 2000, minWidth: 310, width: '100%' }}
