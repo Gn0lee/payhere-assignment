@@ -10,7 +10,9 @@ import { RepositoryData, setPage, setPerPage } from 'src/features/repository/con
 export default function RepositoryTablePagination() {
 	const dispatch = useAppDispatch();
 
-	const { perPage, totalCount, page, isLoaded } = useSelector<RootState, RepositoryData>(state => state.repository);
+	const { perPage, totalCount, page, isLoaded, hasError } = useSelector<RootState, RepositoryData>(
+		state => state.repository
+	);
 
 	const sizeChangeHandler: PaginationProps['onShowSizeChange'] = (_, pageSize) => {
 		dispatch(setPerPage(pageSize));
@@ -20,7 +22,7 @@ export default function RepositoryTablePagination() {
 		dispatch(setPage(value));
 	};
 
-	if (!isLoaded) return null;
+	if (!isLoaded || hasError) return null;
 
 	return (
 		<div css={container}>
